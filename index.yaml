@@ -1,0 +1,14 @@
+products:
+  PS5:
+    eldorado:
+      url: https://www.eldorado.ru/cat/detail/igrovaya-pristavka-sony-playstation-5/
+      sale_start_class: buy-box__status-label
+      price_class: product-box-price__active
+    mvideo:
+      url: https://www.mvideo.ru/products/igrovaya-konsol-sony-playstation-5-40073270
+      sale_start_class: fl-pdp-pay__sales-start-date-label
+      price_class: fl-pdp-price__current
+    ozon:
+      url: https://www.ozon.ru/context/detail/id/225198245/
+      sale_start_class: a3x7
+      price_class: c8q7 c8q9
