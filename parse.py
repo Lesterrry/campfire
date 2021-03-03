@@ -1,65 +1,77 @@
+'''''''''''''''''''''''''''''
+COPYRIGHT FETCH DEVELOPMENT,
+
+2021
+'''''''''''''''''''''''''''''
+
 import requests
 import yaml
 from bs4 import BeautifulSoup as bs
 import datetime
 import os
-import pprint
+from colors import *
 
-pp = pprint.PrettyPrinter(indent=1)
+#Opening & parsing config file
+global CONFIG
+try:
+	with open('config.yaml') as config_file:
+		CONFIG = yaml.safe_load(config_file)
+except:
+	print(f"parse: {RED}Ошибка чтения файла конфигурации{RES}")
+	exit(0)
 
-with open('config.yaml') as config_file:
-    config = yaml.safe_load(config_file)
-
+#Opening web session
 session = requests.Session()
-session.headers.update(config['headers'])
+try:
+	session.headers.update(CONFIG['headers'])
+except:
+	print(f"parse: {RED}Ошибка применения заголовков{RES}")
+	exit(0)
 
-
-def save(data, name=None):
-    if name is None:
-        name = str(datetime.datetime.now())
-
-    if not os.path.exists(config['history_folder'] + '/'):
-        os.mkdir(config['history_folder'])
-
-    with open(f'{config["history_folder"]}/{name}.yaml', 'w') as file:
-        yaml.dump(data, file)
-
+def init_routine():
+	#Opening & parsing index file
+	try:
+		with open('index.yaml') as f:
+			a = yaml.safe_load(f)
+			return a
+	except:
+		print(f"parse: {RED}Ошибка чтения файла индекса{RES}")
+		exit(0)
 
 def decode(s: str):
-    s = s.strip().encode("ascii", "ignore").decode()
-    s = ''.join([c for c in s if c.isdigit()])
-    return s
+	s = s.strip().encode("ascii", "ignore").decode()
+	s = ''.join([c for c in s if c.isdigit()])
+	return s
 
+def parse_page(warn: bool, label: (str, str), url, status_class, price_class):
+	try:
+		page = session.get(url)
+	except:
+		print(f"parse: {RED}Не удалось загрузить ресурс {label[0]}@{label[1]}{RES}", end="\n" if warn else "; ", flush=not warn)
+		return {}
+	if page.status_code != 200:
+		print(f"parse: {ORG}Ресурс {label[0]}@{label[1]} вернул {page.status_code}{RES}", end="\n" if warn else "; ", flush=not warn)
+		if page.status_code == 403:
+			with open("info.html", "w") as file:
+				file.write(page.text)
+		return {}
+	soup = bs(page.text, 'lxml')
+	try:
+		st = soup.find(class_=status_class).text.strip()
+	except:
+		if warn: print(f"parse: {ORG}Не удалось обработать ресурс {url}{RES}")
+		return {}
+	try:
+		price = decode(soup.find(class_=price_class).text.strip())
+	except:
+		if warn: print(f"parse: {ORG}Проблема с ценой ресурса {url}{RES}")
+		price = 0
+	return {'status': st, "price": price}
 
-def parse_page(url, sale_start_class, price_class):
-    page = session.get(url)
-
-    if page.status_code != 200:
-        raise NameError(f"Site {url} failed to load, check index.yaml")
-    soup = bs(page.text, 'lxml')
-
-    st = soup.find(class_=sale_start_class).text.strip()
-    price = decode(soup.find(class_=price_class).text.strip())
-
-    return {'status': st, "price": price}
-
-
-def parse(save_res: bool = False):
-    with open('index.yaml') as f:
-        index = yaml.safe_load(f)
-
-    res = {}
-
-    for prod, stores in index['products'].items():
-        res[prod] = {}
-        for store, info in stores.items():
-            res[prod][store] = parse_page(**info)
-
-    if save_res:
-        save(res)
-
-    return res
-
-
-if __name__ == "__main__":
-    pp.pprint(parse(save_res=False))
+def parse_all(warn: bool, routine):
+	res = {}
+	for prod, stores in routine['products'].items():
+		res[prod] = {}
+		for store, info in stores.items():
+			res[prod][store] = parse_page(warn, (prod, store), **info)
+	return res
