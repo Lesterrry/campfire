@@ -1,4 +1,5 @@
-history_folder: history
+refresh_rate: 10 #In seconds
+notification_url: http://api.telegram.org/bot***************/sendMessage?chat_id=182195759&text={TEXT}
 headers:
     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
     Accept-Encoding: gzip, deflate, br
