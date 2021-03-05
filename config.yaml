@@ -1,3 +1,4 @@
 refresh_rate: 60 #In seconds
+one_fall_routine: True #True if first non-200 response should not be followed by any more
 notification_url: http://api.telegram.org/bot*****/sendMessage?chat_id=182195759&text={TEXT} #Use {TEXT} to reference where to paste messages
 zipline_path: /Users/lesterrry/Downloads/campfire-master/zipline.scpt #Path to zipline.scpt file

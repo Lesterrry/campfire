@@ -5,7 +5,7 @@ COPYRIGHT FETCH DEVELOPMENT,
 2021
 '''''''''''''''''''''''''''''
 
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 from colors import *
 import core
@@ -46,5 +46,5 @@ while True:
 						print(f"{RED}Ошибка отправки уведомления{RES}")
 		default = a
 	else:
-		print("БЕЗ ИЗМЕНЕНИЙ", end="", flush=True)
+		print(f"{CYN}БЕЗ ИЗМЕНЕНИЙ{RES}", end="", flush=True)
 	time.sleep(refresh_rate)
