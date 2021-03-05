@@ -4,74 +4,97 @@ COPYRIGHT FETCH DEVELOPMENT,
 2021
 '''''''''''''''''''''''''''''
 
-import requests
-import yaml
 from bs4 import BeautifulSoup as bs
-import datetime
-import os
 from colors import *
+import lifecycle
+import core
+import subprocess
 
-#Opening & parsing config file
-global CONFIG
-try:
-	with open('config.yaml') as config_file:
-		CONFIG = yaml.safe_load(config_file)
-except:
-	print(f"parse: {RED}Ошибка чтения файла конфигурации{RES}")
-	exit(0)
-
-#Opening web session
-session = requests.Session()
-try:
-	session.headers.update(CONFIG['headers'])
-except:
-	print(f"parse: {RED}Ошибка применения заголовков{RES}")
-	exit(0)
-
-def init_routine():
-	#Opening & parsing index file
-	try:
-		with open('index.yaml') as f:
-			a = yaml.safe_load(f)
-			return a
-	except:
-		print(f"parse: {RED}Ошибка чтения файла индекса{RES}")
-		exit(0)
-
-def decode(s: str):
-	s = s.strip().encode("ascii", "ignore").decode()
-	s = ''.join([c for c in s if c.isdigit()])
-	return s
-
-def parse_page(warn: bool, label: (str, str), url, status_class, price_class):
-	try:
-		page = session.get(url)
-	except:
-		print(f"parse: {RED}Не удалось загрузить ресурс {label[0]}@{label[1]}{RES}", end="\n" if warn else "; ", flush=not warn)
-		return {}
-	if page.status_code != 200:
-		print(f"parse: {ORG}Ресурс {label[0]}@{label[1]} вернул {page.status_code}{RES}", end="\n" if warn else "; ", flush=not warn)
-		if page.status_code == 403:
-			with open("info.html", "w") as file:
-				file.write(page.text)
-		return {}
-	soup = bs(page.text, 'lxml')
-	try:
-		st = soup.find(class_=status_class).text.strip()
-	except:
-		if warn: print(f"parse: {ORG}Не удалось обработать ресурс {url}{RES}")
-		return {}
-	try:
-		price = decode(soup.find(class_=price_class).text.strip())
-	except:
-		if warn: print(f"parse: {ORG}Проблема с ценой ресурса {url}{RES}")
-		price = 0
-	return {'status': st, "price": price}
+blacklist = []
 
 def parse_all(warn: bool, routine):
 	res = {}
 	for prod, stores in routine['products'].items():
 		res[prod] = {}
 		for store, info in stores.items():
-			res[prod][store] = parse_page(warn, (prod, store), **info)
+			if info['ceremony'] == 'class_check':
+				res[prod][store] = get_class_from_page(warn, (prod, store), info['headers'], **info['prop'])
+			elif info['ceremony'] == 'lookup':
+				res[prod][store] = lookup_page(warn, (prod, store), info['headers'], **info['prop'])
+			elif info['ceremony'] == 'osa_lookup':
+				res[prod][store] = osa_lookup_page(warn, **info['prop'])
+			else:
+				res[prod][store] = {}
 	return res
+
+def decode(s: str):
+	s = s.strip().encode("ascii", "ignore").decode()
+	s = ''.join([c for c in s if c.isdigit()])
+	return s
+
+def get_class_from_page(warn: bool, label: (str, str), headers, url, status_class, price_class):
+	page = get_page(warn, headers, url, label)
+	if not page:
+		return {}
+	soup = bs(page.text, 'lxml')
+	try:
+		st = soup.find(class_=status_class).text.strip()
+	except:
+		if label in blacklist:
+			if warn: print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]}{RES}")
+		else:
+			a = f"Не удалось обработать ресурс {label[0]}@{label[1]}"
+			if warn: print(f"parse: {ORG}{a}{RES}")
+			if not core.notify(a, lifecycle.CONFIG):
+				print(f"{RED}Ошибка отправки уведомления{RES}")
+			blacklist.append(label)
+		return {}
+	try: 
+		blacklist.remove(label)
+	except Exception:
+		pass
+	return st
+
+def lookup_page(warn: bool, label: (str, str), headers, url, key):
+	page = get_page(warn, headers, url, label)
+	if not page:
+		return False
+	return key in page.text
+
+def osa_lookup_page(warn: bool, url, key):
+	a = subprocess.check_output(['osascript', lifecycle.CONFIG["zipline_path"], url, key])
+	if "true" in str(a): return True
+	elif "false" in str(a): return False
+	else: print(f"parse: {RED}OSA error: {a}{RES}")
+
+def get_page(warn: bool, headers, url, label: (str, str)):
+	try:
+		lifecycle.SESSION.headers.update(headers)
+		page = lifecycle.SESSION.get(url)
+	except Exception as e:
+		if label in blacklist:
+			print(f"parse: {RED}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}", end="\n" if warn else "; ", flush=not warn)
+		else:
+			a = f"Не удалось загрузить ресурс {label[0]}@{label[1]}: {e}"
+			print(f"parse: {RED}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
+			if not core.notify(a, lifecycle.CONFIG):
+				print(f"{RED}Ошибка отправки уведомления{RES}")
+			blacklist.append(label)
+		return {}
+	if page.status_code != 200:
+		if label in blacklist:
+			print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]} (>{page.status_code}){RES}", end="\n" if warn else "; ", flush=not warn)
+		else:
+			a = f"Ресурс {label[0]}@{label[1]} вернул {page.status_code}"
+			print(f"parse: {ORG}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
+			if not core.notify(a, lifecycle.CONFIG):
+				print(f"{RED}Ошибка отправки уведомления{RES}")
+			with open(f"records/{label[0]}@{label[1]}.html", "w") as file:
+				file.write(page.text)
+			blacklist.append(label)
+		return {}
+	try: 
+		blacklist.remove(label)
+	except Exception:
+		pass
+	return page

@@ -5,42 +5,46 @@ COPYRIGHT FETCH DEVELOPMENT,
 2021
 '''''''''''''''''''''''''''''
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
-from colors import * 
+from colors import *
+import core
+import parse
+import lifecycle
 import time
 
 print(f"Добро пожаловать в Campfire v{VERSION}")
 print("Запуск сессии...")
-from parse import *
-from core import *
-refresh_rate = CONFIG['refresh_rate']
+lifecycle.init()
+refresh_rate = lifecycle.CONFIG['refresh_rate']
 print("Формирование рутины...")
-routine = init_routine()
+routine = core.init_routine()
 print("Сохранение типовых значений...")
-default = parse_all(True, routine)
+default = parse.parse_all(True, routine)
 for prod, stores in default.items():
 		for store, info in stores.items():
-			print(f"    {prod}@{store}: {info.get('status', None)}")
+			print(f"    {prod}@{store}: {'НЕСОД' if not info else ('СОД' if info == True else info)}")
+print("Ожидание...")
+time.sleep(refresh_rate)
 print("\nЗапуск цикла...")
-if not notify("Цикл запущен", CONFIG):
-	print(f"{RED}Ошибка отправки уведомления{RES}")
 
 j = 0
 while True:
 	j += 1
-	start_time = time.time()
 	print(f"{CRR + ERS}{j} итерация... ", end="", flush=True)
-	a = parse_all(False, routine)
+	a = parse.parse_all(False, routine)
 	if a != default:
-		print(f"{CYN}ЕСТЬ ИЗМЕНЕНИЯ{RES}", end="", flush=True)
+		print(f"\n{MAG}ЕСТЬ ИЗМЕНЕНИЯ: {RES}", end="", flush=True)
 		for prod, stores in a.items():
 			for store, info in stores.items():
-				b = info.get('status', None)
-				c = default[prod][store].get('status', None)
-				if b != c: 
-					print(f" {prod}@{store}: {c} => {b}", end="", flush=True)
+				b = info
+				c = default[prod][store]
+				if b != c:
+					d = f" {prod}@{store}: {c} => {b}"
+					print(d)
+					if not core.notify(d, lifecycle.CONFIG):
+						print(f"{RED}Ошибка отправки уведомления{RES}")
 		default = a
 	else:
 		print("БЕЗ ИЗМЕНЕНИЙ", end="", flush=True)
-	time.sleep(refresh_rate - (start_time - time.time()))
+	time.sleep(refresh_rate)
