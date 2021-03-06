@@ -1,20 +1,17 @@
 products:
   PS5:
-    eldorado:
-      ceremony: class_check
-      headers:
-        Cookie: __zzatgib-w-eldorado=MDA0dBA=Fz2+aQ==; cfidsgib-w-eldorado=jRvQe/YF7JEFH80AvnvZPOOiLgFQg06r5QydAOZzfhrUgKLWeQ8ZLZybQQ6aQuu5HcKAQn8b/aa7xh0EVgwR3Kdl+drO/d3dKXmFx5Vs29LatmBk19FzYfuZ00GNMytAeQAPCxItFxKpSilLYo9Q2gqrh8e2q6okLsoS; gsscgib-w-eldorado=CtBwUxjjR/BLcsBn+BjnuPm5l9t9LKbj1RgI2PkWXqHYjZdBMtW75fpEVZE91fMiO/F2nyqsZ0ZHz5s+HX3PC7bp9qF2V72asEz7G+dcoNNLPjorv0pJm3w03xFkCilXiVh7L/NGToUwgy5jcrP92T/6od+5BNj4QQhHWa1FhiZhzOO6W0jbLSc5G8alK19u+6g+rO88Zmg4F7TSF3bpzLkOuiQAWbvNwt48E7kghiQERozA7wirVRo5HSRbXQ==; ABT_test=B; AC=1; AUTORIZZ=0; BITRIX_SM_SALE_UID=9756144136; PHPSESSID=o6mckdb5svsvfd92q3ohk2m7uc; bonus_cobrand_showed=0; ek_ab_test=A; el_group_user_org=0; lv_user_org=0; show_region_popup=0; dt=1; iRegionSectionId=11324; _dy_c_exps=; _dy_csc_ses=t; _dy_df_geo=Russia..Khimki; _dy_geo=RU.EU.RU_MOS.RU_MOS_Khimki; _dy_lu_ses=8a1d49525efb7ac8d08b44d3b098e7df%3A1614955433575; _dy_ses_load_seq=44414%3A1614955433178; _dy_soct=1003181.1004426.1614955433*1007167.1011280.1614955433*1009413.1015420.1614955433*1017093.1067478.1614955433*1028247.1054440.1614955433*1033852.1068353.1614955433*1007065.1011142.1614955433*1025826.1047956.1614955433*1037180.1080459.1614955433*1020255.1036209.1614955433*1041165.1093588.1614955433*1028959.1056007.1614955433*1035583.1074724.1614955433*1036817.1079340.1614955433; _dy_toffset=0; _dycnst=dg; _dycst=dk.m.s.ws.; _dyfs=1614955433574; _dyid=-5584462595726621783; _dyjsession=8a1d49525efb7ac8d08b44d3b098e7df; digi-SearchVisitor=10%3A3; dy_fs_page=www.eldorado.ru; reuserid=9be89af7-8b31-4850-8e67-d7121d5252bc; userSplit=B
-        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-        If-None-Match: W/"bc40e-cALn6t6yibrjbpmooA2cHNF8Qz8"
-        Host: www.eldorado.ru
-        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
-        Accept-Language: ru
-        Accept-Encoding: gzip, deflate, br
-        Connection: keep-alive
-      prop:
-        url: https://www.eldorado.ru/cat/detail/igrovaya-pristavka-sony-playstation-5/
-        status_class: buy-box__status-label
-        price_class: product-box-price__active
+    # eldorado:
+    #   ceremony: class_check
+    #   headers:
+    #     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    #     Host: www.eldorado.ru
+    #     User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
+    #     Accept-Language: ru
+    #     Accept-Encoding: gzip, deflate, br
+    #     Connection: keep-alive
+    #   prop:
+    #     url: https://www.eldorado.ru/cat/detail/igrovaya-pristavka-sony-playstation-5/
+    #     status_class: buy-box__status-label
     mvideo:
       ceremony: class_check
       headers:
@@ -28,9 +25,27 @@ products:
       prop:
         url: https://www.mvideo.ru/products/igrovaya-konsol-sony-playstation-5-40073270
         status_class: fl-pdp-pay__sales-start-date-label
-        price_class: fl-pdp-price__current
-    ozon:
-      ceremony: osa_lookup
+    citilink:
+      ceremony: class_check
+      headers:
+        Cookie: _rire_test_id=-1; _tuid=a11e97175a0bad2dec13b2a31f909b294b14c5fd; _space=msk_cl%3A; ab_test=90x10v4%3A2%7Creindexer%3A2%7Cnew_designv10%3A2%7Cnew_designv11%3A1%7Cdummy%3A20; ab_test_analytics=90x10v4%3A2%7Creindexer%3A2%7Cnew_designv10%3A2%7Cnew_designv11%3A1%7Cdummy%3A20; old_design=0
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
+        Host: www.citilink.ru
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
+        Accept-Language: ru
+        Accept-Encoding: gzip, deflate, br
+        Connection: keep-alive
       prop:
-        url: https://www.ozon.ru/context/detail/id/225198245/
-        key: "Товар закончился"
+        url: https://www.citilink.ru/product/igrovaya-konsol-playstation-5-ps719398707-belyi-1438618/
+        status_class: ProductHeader__price
+    # sony_store:
+    #   ceremony: class_check
+    #   headers:
+    #     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
+    #     User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
+    #     Accept-Language: ru
+    #     Accept-Encoding: gzip, deflate, br
+    #     Connection: keep-alive
+    #   prop:
+    #     url: https://store.sony.ru/product/konsol-playstation-5-317406/
+    #     status_class: availability a-preorder

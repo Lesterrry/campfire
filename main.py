@@ -5,7 +5,7 @@ COPYRIGHT FETCH DEVELOPMENT,
 2021
 '''''''''''''''''''''''''''''
 
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 
 from colors import *
 import core
@@ -16,7 +16,7 @@ import time
 print(f"Добро пожаловать в Campfire v{VERSION}")
 print("Запуск сессии...")
 lifecycle.init()
-refresh_rate = lifecycle.CONFIG['refresh_rate']
+refresh_rate = lifecycle.CONFIG['refresh_rate'] * 60
 print("Формирование рутины...")
 routine = core.init_routine()
 print("Сохранение типовых значений...")
@@ -40,7 +40,7 @@ while True:
 				b = info
 				c = default[prod][store]
 				if b != c:
-					d = f" {prod}@{store}: {c} => {b}"
+					d = f" {prod}@{store}: {'НЕСОД' if not c else ('СОД' if c == True else c)} => {'НЕСОД' if not b else ('СОД' if b == True else b)}"
 					print(d)
 					if not core.notify(d, lifecycle.CONFIG):
 						print(f"{RED}Ошибка отправки уведомления{RES}")

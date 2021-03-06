@@ -16,23 +16,34 @@ def parse_all(warn: bool, routine):
 	res = {}
 	for prod, stores in routine['products'].items():
 		res[prod] = {}
+		at_least = False
 		for store, info in stores.items():
-			if info['ceremony'] == 'class_check':
-				res[prod][store] = get_class_from_page(warn, (prod, store), info['headers'], **info['prop'])
-			elif info['ceremony'] == 'lookup':
-				res[prod][store] = lookup_page(warn, (prod, store), info['headers'], **info['prop'])
-			elif info['ceremony'] == 'osa_lookup':
-				res[prod][store] = osa_lookup_page(warn, **info['prop'])
-			else:
+			if (prod, store) in blacklist and lifecycle.CONFIG['one_fall_routine']:
+				print(f"Игнорируется {prod}@{store}", end="\n" if warn else "; ", flush=not warn)
 				res[prod][store] = {}
-	return res
+			else:
+				at_least = True
+				if info['ceremony'] == 'class_check':
+					res[prod][store] = get_class_from_page(warn, (prod, store), info['headers'], **info['prop'])
+				elif info['ceremony'] == 'lookup':
+					res[prod][store] = lookup_page(warn, (prod, store), info['headers'], **info['prop'])
+				elif info['ceremony'] == 'osa_lookup':
+					res[prod][store] = osa_lookup_page(warn, (prod, store), **info['prop'])
+				else:
+					res[prod][store] = {}
+	if at_least:
+		return res
+	else:
+		a = "Рутина пуста, завершение работы"
+		core.notify(a)
+		print(a)
 
 def decode(s: str):
 	s = s.strip().encode("ascii", "ignore").decode()
 	s = ''.join([c for c in s if c.isdigit()])
 	return s
 
-def get_class_from_page(warn: bool, label: (str, str), headers, url, status_class, price_class):
+def get_class_from_page(warn: bool, label: (str, str), headers, url, status_class):
 	page = get_page(warn, headers, url, label)
 	if not page:
 		return {}
@@ -61,11 +72,16 @@ def lookup_page(warn: bool, label: (str, str), headers, url, key):
 		return False
 	return key in page.text
 
-def osa_lookup_page(warn: bool, url, key):
-	a = subprocess.check_output(['osascript', lifecycle.CONFIG["zipline_path"], url, key])
-	if "true" in str(a): return True
-	elif "false" in str(a): return False
-	else: print(f"parse: {RED}OSA error: {a}{RES}")
+def osa_lookup_page(warn: bool, label: (str, str), url, key):
+	try:
+		a = subprocess.check_output(['osascript', lifecycle.CONFIG["zipline_path"], url, key])
+		if "true" in str(a): return True
+		else: return False
+	except Exception as e:
+		b = f"Ошибка OSA: {e}"
+		core.notify(b)
+		print(f"parse: {RED}{b}{RES}")
+		blacklist.append(label)
 
 def get_page(warn: bool, headers, url, label: (str, str)):
 	try:
