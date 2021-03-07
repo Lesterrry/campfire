@@ -7,6 +7,7 @@ COPYRIGHT FETCH DEVELOPMENT,
 import requests
 import urllib
 import yaml
+import lifecycle
 from colors import *
 
 def handle_error(module: str, text: str):
@@ -14,13 +15,13 @@ def handle_error(module: str, text: str):
 	exit(0)
 
 def notify(text: str, conf):
-	try:
-		a = requests.get(conf['notification_url'].replace("{TEXT}", text))
-		#a = 1
-	except:
-		return False
-	return a.status_code == 200
-	#return True
+	if lifecycle.CONFIG['notify']:
+		try:
+			a = requests.get(conf['notification_url'].replace("{TEXT}", f"{lifecycle.CONFIG['device_name']}: {text}"))
+		except:
+			return False
+		return a.status_code == 200
+	return True
 
 def init_routine():
 	#Opening & parsing index file

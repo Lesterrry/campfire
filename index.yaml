@@ -39,7 +39,7 @@ products:
         url: https://www.citilink.ru/product/igrovaya-konsol-playstation-5-ps719398707-belyi-1438618/
         status_class: ProductHeader__price
     # sony_store:
-    #   ceremony: class_check
+    #   ceremony: lookup
     #   headers:
     #     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
     #     User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
@@ -48,4 +48,4 @@ products:
     #     Connection: keep-alive
     #   prop:
     #     url: https://store.sony.ru/product/konsol-playstation-5-317406/
-    #     status_class: availability a-preorder
+    #     key: <div class="item-button sold_out_button">

@@ -1,5 +1,8 @@
+device_name: MBP-Covey #Device name to display in notifications
 refresh_rate: 20 #In minutes
 one_fall_routine: True #True if first non-200 response should not be followed by any more
 notify: True #True if notifications are wanted
-notification_url: http://api.telegram.org/bot1608801527:AAEhYLBStJcHNuGDSvqlk99EJaV3QRXAq7U/sendMessage?chat_id=182195759&text={TEXT} #Use {TEXT} to reference where to paste messages
+siren: False #True if playing music on events is wanted
+notification_url: http://api.telegram.org/bot1608801527:AAEhYLBStJcHNuGDSvqlk99EJaV3QRXAq7U/sendMessage?chat_id=-572428662&text={TEXT} #Use {TEXT} to reference where to paste messages
 zipline_path: /Users/lesterrry/Downloads/campfire-master/zipline.scpt #Path to zipline.scpt file
+siren_path: /Users/lesterrry/Downloads/campfire-master/siren.scpt #Path to siren.scpt file

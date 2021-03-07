@@ -35,8 +35,8 @@ def parse_all(warn: bool, routine):
 		return res
 	else:
 		a = "Рутина пуста, завершение работы"
-		core.notify(a)
 		print(a)
+		core.notify(a, lifecycle.CONFIG)
 
 def decode(s: str):
 	s = s.strip().encode("ascii", "ignore").decode()
