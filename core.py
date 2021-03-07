@@ -17,7 +17,7 @@ def handle_error(module: str, text: str):
 def notify(text: str, conf):
 	if lifecycle.CONFIG['notify']:
 		try:
-			a = requests.get(conf['notification_url'].replace("{TEXT}", f"{lifecycle.CONFIG['device_name']}: {text}"))
+			a = requests.get(conf['notification_url'].replace("{TEXT}", f"({lifecycle.CONFIG['device_name']}) {text}"))
 		except:
 			return False
 		return a.status_code == 200

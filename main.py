@@ -23,14 +23,13 @@ default = parse.parse_all(True, routine)
 for prod, stores in default.items():
 		for store, info in stores.items():
 			print(f"    {prod}@{store}: {'НЕСОД' if not info else ('СОД' if info == True else info)}")
-print("Ожидание...")
-time.sleep(refresh_rate)
 print("\nЗапуск цикла...")
 
 j = 0
 r = 0
 while True:
-	print(f"{CRB}Осталось: {refresh_rate - r}м{ERS}", end="", flush=True)
+	x = refresh_rate - r
+	print(f"Осталось: {'' if x >= 10 else '0'}{x}м  {CRB(15)}", end="", flush=True)
 	r += 1
 	if r == refresh_rate:
 		r = 0
