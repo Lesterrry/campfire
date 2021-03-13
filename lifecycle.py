@@ -7,7 +7,7 @@ COPYRIGHT FETCH DEVELOPMENT,
 import yaml
 import requests
 
-VERSION = "0.1.6 (070321), Nested"
+VERSION = "0.1.8 (130321), Nested"
 
 #Opening & parsing config file
 def init():
