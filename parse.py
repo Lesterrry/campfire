@@ -48,16 +48,17 @@ def get_class_from_page(warn: bool, label: (str, str), headers, url, status_clas
 	if not page:
 		return {}
 	soup = bs(page.text, 'lxml')
+	with open(f"records/{label[0]}@{label[1]}.html", "w") as file:
+		file.write(page.text)
 	try:
 		st = soup.find(class_=status_class).text.strip()
-	except:
+	except Exception as e:
 		if label in blacklist:
-			if warn: print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]}{RES}")
+			if warn: print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}")
 		else:
-			a = f"Не удалось обработать ресурс {label[0]}@{label[1]}"
+			a = f"Не удалось обработать ресурс {label[0]}@{label[1]} ({e})"
 			if warn: print(f"parse: {ORG}{a}{RES}")
-			if not core.notify(a, lifecycle.CONFIG):
-				print(f"{RED}Ошибка отправки уведомления{RES}")
+			core.notify(a, lifecycle.CONFIG)
 			blacklist.append(label)
 		return {}
 	try: 
@@ -72,14 +73,16 @@ def lookup_page(warn: bool, label: (str, str), headers, url, key):
 		return False
 	return key in page.text
 
-def osa_lookup_page(warn: bool, label: (str, str), url, key):
+def osa_lookup_page(warn: bool, label: (str, str), url, soldout_key, in_stock_key):
 	try:
-		a = subprocess.check_output(['osascript', lifecycle.CONFIG["zipline_path"], url, key])
-		if "true" in str(a): return True
-		else: return False
+		a = subprocess.check_output(['osascript', lifecycle.CONFIG["zipline_path"], url, soldout_key, in_stock_key])
+		if "sold_out" in str(a): return "СОЛДАУТ"
+		elif "in_stock" in str(a): return "В ПРОДАЖЕ"
+		elif "time_out" in str(a): return "ТАЙМАУТ"
+		else: raise ValueError(f"OSA returned {str(a)}")
 	except Exception as e:
 		b = f"Ошибка OSA: {e}"
-		core.notify(b)
+		core.notify(b, lifecycle.CONFIG)
 		print(f"parse: {RED}{b}{RES}")
 		blacklist.append(label)
 
@@ -93,9 +96,7 @@ def get_page(warn: bool, headers, url, label: (str, str)):
 		else:
 			a = f"Не удалось загрузить ресурс {label[0]}@{label[1]}: {e}"
 			print(f"parse: {RED}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
-			if not core.notify(a, lifecycle.CONFIG):
-				print(f"{RED}Ошибка отправки уведомления{RES}")
-			blacklist.append(label)
+			core.notify(a, lifecycle.CONFIG)
 		return {}
 	if page.status_code != 200:
 		if label in blacklist:
@@ -103,8 +104,7 @@ def get_page(warn: bool, headers, url, label: (str, str)):
 		else:
 			a = f"Ресурс {label[0]}@{label[1]} вернул {page.status_code}"
 			print(f"parse: {ORG}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
-			if not core.notify(a, lifecycle.CONFIG):
-				print(f"{RED}Ошибка отправки уведомления{RES}")
+			core.notify(a, lifecycle.CONFIG)
 			with open(f"records/{label[0]}@{label[1]}.html", "w") as file:
 				file.write(page.text)
 			blacklist.append(label)
