@@ -1,4 +1,4 @@
-#Formatting codes for console output
+# Formatting codes for console output
 RED = "\x1b[31m"
 GRN = "\x1b[32m"
 ORG = "\x1b[33m"

@@ -1,52 +1,62 @@
 products:
-  PS5:
-    eldorado:
-      ceremony: class_check
+  rave:
+    v-a-c:
+      ceremony: lookup
+      headers:
+        Accept: "*/*"
+        Accept-Language: ru
+        Referer: https://v-a-c.org/ges2/rave-the-third-part-of-the-night
+        Host: v-a-c.org
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15
+        Authorization: undefined
+        Accept-Encoding: gzip, deflate, br
+        Connection: keep-alive
+      prop:
+        url: https://v-a-c.org/ges2/rave-the-third-part-of-the-night
+        key: Проведение рейва 22 января было отложено
+  end-of-the-world:
+    military:
+      ceremony: code-check
       headers:
         Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-        Host: www.eldorado.ru
-        User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1
-        Accept-Language: ru
         Accept-Encoding: gzip, deflate, br
+        Host: mil.ru
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15
+        Accept-Language: ru
         Connection: keep-alive
-        Referer: https://www.eldorado.ru/promo/prm-playstation5/
       prop:
-        url: https://www.eldorado.ru/cat/detail/igrovaya-pristavka-sony-playstation-5/
-        status_class: text-label text-label--green
-    mvideo:
-      ceremony: class_check
+        url: https://mil.ru/
+    telegram:
+      ceremony: code-check
       headers:
-        Cookie: deviceType=desktop; CACHE_INDICATOR=true; COMPARISON_INDICATOR=false; MVID_REGION_ID=1; MVID_VIEWED_PRODUCTS=; bIPs=2118529862; flacktory=no; ADRUM_BT1=R:0|i:1047|e:1134; ADRUM_BTa=R:0|g:8a61f398-5ff7-4c06-ac7e-f7edeeac5945|n:customer1_b8e1f0e6-cc5b-4da4-a095-00a44385df2e; BIGipServeratg-ps-prod_tcp80=1929698314.20480.0000; BIGipServeratg-ps-prod_tcp80_clone=1929698314.20480.0000; SameSite=None; MVID_GTM_BROWSER_THEME=1; HINTS_FIO_COOKIE_NAME=1; JSESSIONID=624FgBgQgDPhGHJZld1FFKwLLLQsfhyYSv1dVnW1Z4jSSJNqkBFp!1078999319; MVID_YA_BLOCKER=1; MVID_YOUDO_BUTTON_AB_TEST=2; M_CLUB_AB_TEST=2; M_MAG_AB_TEST=1; PROMOLISTING_WITHOUT_STOCK_AB_TEST=2; searchType2=3; wurfl_device_id=generic_web_browser; MVID_CITY_ID=CityCZ_975; MVID_GUEST_ID=10612999823
-        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
-        Host: www.mvideo.ru
-        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        Host: telegram.org
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15
         Accept-Language: ru
         Accept-Encoding: gzip, deflate, br
         Connection: keep-alive
       prop:
-        url: https://www.mvideo.ru/products/igrovaya-konsol-sony-playstation-5-40073270
-        status_class: fl-pdp-pay__sales-start-date-label
-    citilink:
-      ceremony: class_check
+        url: https://telegram.org
+    bbc:
+      ceremony: code-check
       headers:
-        Cookie: _rire_test_id=-1; _tuid=a11e97175a0bad2dec13b2a31f909b294b14c5fd; _space=msk_cl%3A; ab_test=90x10v4%3A2%7Creindexer%3A2%7Cnew_designv10%3A2%7Cnew_designv11%3A1%7Cdummy%3A20; ab_test_analytics=90x10v4%3A2%7Creindexer%3A2%7Cnew_designv10%3A2%7Cnew_designv11%3A1%7Cdummy%3A20; old_design=0
-        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
-        Host: www.citilink.ru
-        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        Upgrade-Insecure-Requests: "1"
+        Host: www.bbc.com
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15
+        Accept-Language: ru
+        Accept-Encoding: gzip, deflate
+        Connection: keep-alive
+      prop:
+        url: https://www.bbc.com
+    ua-gov:
+      ceremony: code-check
+      headers:
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        Host: president.gov.ua
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15
         Accept-Language: ru
         Accept-Encoding: gzip, deflate, br
         Connection: keep-alive
       prop:
-        url: https://www.citilink.ru/product/igrovaya-konsol-playstation-5-ps719398707-belyi-1438618/
-        status_class: ProductHeader__price
-    # sony_store:
-    #   ceremony: lookup
-    #   headers:
-    #     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 
-    #     User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15
-    #     Accept-Language: ru
-    #     Accept-Encoding: gzip, deflate, br
-    #     Connection: keep-alive
-    #   prop:
-    #     url: https://store.sony.ru/product/konsol-playstation-5-317406/
-    #     key: <div class="item-button sold_out_button">
+        url: https://president.gov.ua

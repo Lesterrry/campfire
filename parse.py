@@ -1,7 +1,7 @@
 '''''''''''''''''''''''''''''
 COPYRIGHT FETCH DEVELOPMENT,
 
-2021
+2021-2022
 '''''''''''''''''''''''''''''
 
 from bs4 import BeautifulSoup as bs
@@ -19,16 +19,18 @@ def parse_all(warn: bool, routine):
 		at_least = False
 		for store, info in stores.items():
 			if (prod, store) in blacklist and lifecycle.CONFIG['one_fall_routine']:
-				print(f"Игнорируется {prod}@{store}", end="\n" if warn else "; ", flush=not warn)
+				core.safe_print(f"Игнорируется {prod}@{store}", end="\n" if warn else "; ", flush=not warn)
 				res[prod][store] = {}
 			else:
 				at_least = True
-				if info['ceremony'] == 'class_check':
+				if info['ceremony'] == 'class-check':
 					res[prod][store] = get_class_from_page(warn, (prod, store), info['headers'], **info['prop'])
 				elif info['ceremony'] == 'lookup':
 					res[prod][store] = lookup_page(warn, (prod, store), info['headers'], **info['prop'])
-				elif info['ceremony'] == 'osa_lookup':
+				elif info['ceremony'] == 'osa-lookup':
 					res[prod][store] = osa_lookup_page(warn, (prod, store), **info['prop'])
+				elif info['ceremony'] == 'code-check':
+					res[prod][store] = get_page_code(warn, (prod, store), info['headers'], **info['prop'])
 				else:
 					res[prod][store] = {}
 	if at_least:
@@ -54,14 +56,16 @@ def get_class_from_page(warn: bool, label: (str, str), headers, url, status_clas
 		st = soup.find(class_=status_class).text.strip()
 	except Exception as e:
 		if label in blacklist:
-			if warn: print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}")
+			if warn: 
+				print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}")
 		else:
 			a = f"Не удалось обработать ресурс {label[0]}@{label[1]} ({e})"
-			if warn: print(f"parse: {ORG}{a}{RES}")
+			if warn:
+				print(f"parse: {ORG}{a}{RES}")
 			core.notify(a, lifecycle.CONFIG)
 			blacklist.append(label)
 		return {}
-	try: 
+	try:
 		blacklist.remove(label)
 	except Exception:
 		pass
@@ -86,30 +90,55 @@ def osa_lookup_page(warn: bool, label: (str, str), url, soldout_key, in_stock_ke
 		print(f"parse: {RED}{b}{RES}")
 		blacklist.append(label)
 
+def get_page_code(warn: bool, label: (str, str), headers, url):
+	try:
+		lifecycle.SESSION.headers.update(headers)
+		page = lifecycle.SESSION.get(url)
+	except Exception as e:
+		if label in blacklist:
+			if warn:
+				print(f"parse: {RED}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}", end="\n" if warn else "; ", flush=not warn)
+		else:
+			a = f"Не удалось загрузить ресурс {label[0]}@{label[1]}: {e}"
+			if warn:
+				print(f"parse: {RED}{a}{RES}", end="\n", flush=True)
+			core.notify(a, lifecycle.CONFIG)
+			blacklist.append(label)
+		return {}
+	try:
+		blacklist.remove(label)
+	except Exception:
+		pass
+	return page.status_code
+
 def get_page(warn: bool, headers, url, label: (str, str)):
 	try:
 		lifecycle.SESSION.headers.update(headers)
 		page = lifecycle.SESSION.get(url)
 	except Exception as e:
 		if label in blacklist:
-			print(f"parse: {RED}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}", end="\n" if warn else "; ", flush=not warn)
+			if warn:
+				print(f"parse: {RED}Повторилась проблема с {label[0]}@{label[1]} ({e}){RES}", end="\n" if warn else "; ", flush=not warn)
 		else:
 			a = f"Не удалось загрузить ресурс {label[0]}@{label[1]}: {e}"
-			print(f"parse: {RED}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
+			if warn:
+				print(f"parse: {RED}{a}{RES}", end="\n", flush=True)
 			core.notify(a, lifecycle.CONFIG)
+			blacklist.append(label)
 		return {}
 	if page.status_code != 200:
 		if label in blacklist:
 			print(f"parse: {ORG}Повторилась проблема с {label[0]}@{label[1]} (>{page.status_code}){RES}", end="\n" if warn else "; ", flush=not warn)
 		else:
 			a = f"Ресурс {label[0]}@{label[1]} вернул {page.status_code}"
-			print(f"parse: {ORG}{a}{RES}", end="\n" if warn else "; ", flush=not warn)
+			if warn:
+				print(f"parse: {ORG}{a}{RES}", end="\n", flush=True)
 			core.notify(a, lifecycle.CONFIG)
 			with open(f"records/{label[0]}@{label[1]}.html", "w") as file:
 				file.write(page.text)
 			blacklist.append(label)
 		return {}
-	try: 
+	try:
 		blacklist.remove(label)
 	except Exception:
 		pass
