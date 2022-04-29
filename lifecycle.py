@@ -8,7 +8,7 @@ import yaml
 import requests
 import os
 
-VERSION = "0.1.10 (250222), Nested"
+VERSION = "1.0.0 (290422)"
 
 # Opening & parsing config file
 def init():
