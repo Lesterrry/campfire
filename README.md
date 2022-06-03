@@ -4,7 +4,7 @@
 Campfire monitors the internet and informs you about any changes
 ## How to use
 1. Clone the repo
-2. Modify `config.yaml`
+2. Copy `config_example.yaml` to `config.yaml` and edit it
 3. Modify `index.yaml` (see [Index file syntax](#index-file-syntax))
 ## Index file syntax
 I'm too lazy to explain everything thoroughly, so just examine the file and scripts if you like\

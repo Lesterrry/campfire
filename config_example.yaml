@@ -1,0 +1,12 @@
+silent: False  # Disable console output
+device_name: MBP-Covey  # Device name to display in notifications
+refresh_rate: 30  # In minutes
+one_fall_routine: False  # True if first non-200 response should not be followed by any more
+notify: False  # True if notifications are wanted
+siren: False  # True if playing music on events is wanted
+notification_url: http://api.telegram.org/bot***/sendMessage?chat_id=***&text={TEXT}  # Use {TEXT} to reference where to paste messages
+zipline_path: /zipline.scpt  # Path to zipline.scpt file
+siren_path: /siren.scpt  # Path to siren.scpt file
+cronitor_integrated: True  # Whether to send heartbeats to cronitor
+cronitor_key: key
+cronitor_id: id

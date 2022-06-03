@@ -11,6 +11,7 @@ import parse
 import lifecycle
 import time
 import os
+import requests
 
 lifecycle.init()
 refresh_rate = lifecycle.CONFIG['refresh_rate']
@@ -54,4 +55,5 @@ while True:
 			default = a
 		else:
 			core.safe_print(f"{CYN}БЕЗ ИЗМЕНЕНИЙ{RES} ", end="", flush=True)
+		core.cronitor_ping()
 	time.sleep(60)
