@@ -14,7 +14,6 @@ import os
 def handle_error(module: str, text: str):
 	print(f"{module}: {RED}{text}{RES}")
 	exit(1)
-
 def cronitor_ping():
 	if lifecycle.CONFIG['cronitor_integrated']:
 		requests.get(f"https://cronitor.link/p/{lifecycle.CONFIG['cronitor_key']}/{lifecycle.CONFIG['cronitor_id']}?host={lifecycle.CONFIG['device_name']}", timeout=10)

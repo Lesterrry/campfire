@@ -47,7 +47,7 @@ while True:
 					if b != c:
 						d = f" {prod}@{store}: {'НЕСОД' if not c else ('СОД' if c == True else c)} => {'НЕСОД' if not b else ('СОД' if b == True else b)}"
 						core.safe_print(d)
-						core.reload()
+						lifecycle.reload()
 						if lifecycle.CONFIG['siren'] and b != dict() and b != True and b != False:
 							os.system(f"osascript {lifecycle.CONFIG['siren_path']}")
 						if not core.notify(d, lifecycle.CONFIG):

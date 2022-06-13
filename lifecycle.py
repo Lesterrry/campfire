@@ -8,7 +8,7 @@ import yaml
 import requests
 import os
 
-VERSION = "1.0.1-beta (030622)"
+VERSION = "1.0.2-beta (130622)"
 
 # Opening & parsing config file
 def init():
